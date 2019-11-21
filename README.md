@@ -15,7 +15,7 @@ What the code basically does, flow of data.
 Pointers: 
 - takes video input 
 - splits into frames
-- does frame level computation and give pixel diff 
+- does frame level computation and gives pixel diff of each R, G and B channels 
 - chooses which frames to be selected based on user input for `threshold`
 - joins the selected frames to make a video 
 - no sound, add external sound source later
