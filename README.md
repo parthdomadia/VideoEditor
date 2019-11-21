@@ -10,7 +10,8 @@ All the differnet modules of the main code are also uploaded from which I build 
 
 
 
-What the code basically does, flow of data 
+What the code basically does, flow of data. 
+
 Pointers: 
 - takes video input 
 - splits into frames
