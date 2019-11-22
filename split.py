@@ -3,13 +3,13 @@ import numpy as np
 import os
 
 # Playing video from file:
-cap = cv2.VideoCapture('/Users/playment/Parth /Codes/AI_VideoEditing/Sample_videos/sample.mp4')
+cap = cv2.VideoCapture('/Users/playment/Parth /Codes/AI_VideoEditing/Sample_videos/sample1.mp4')
 success = cap.read()
 try:
-    if not os.path.exists('data1'):
-        os.makedirs('data1')
+    if not os.path.exists('data'):
+        os.makedirs('data')
 except OSError:
-    print ('Error: Creating directory of data1')
+    print ('Error: Creating directory of data')
 
 currentFrame = 0
 while success:
@@ -17,7 +17,7 @@ while success:
     success, frame = cap.read()
 
     # Saves image of the current frame in jpg file
-    name = './data1/frame' + str(currentFrame) + '.jpg'
+    name = './data/' + str(currentFrame) + '.jpg'
     print ('Creating...' + name)
     cv2.imwrite(name, frame)
 
