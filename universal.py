@@ -4,32 +4,36 @@ import shutil
 import imageio
 import decimal
 import pathlib
+import random
 import numpy as np
 from natsort import natsorted
 import matplotlib.pyplot as plt
+p=0
+q=0
 
 change = []
 threshold = 0.1
-videos = os.listdir('PATH TO VIDEOS DIRECTORY')
+videos = os.listdir('sample_videos')
 videos = natsorted(videos)
 for video in videos:
-    cap = cv2.VideoCapture('PATH TO VIDEOS DIRECTORY' + video)
+    cap = cv2.VideoCapture('sample_videos/' + video)
     success = cap.read()
     currentFrame = 0
-    os.makedirs('data_' + video)
+    os.makedirs('data')
     while success:
         # Capture frame-by-frame
         success, frame = cap.read()
 
         # Saves image of the current frame in jpg file
-        name = './data_'+ video + '/' + video + '_' + str(currentFrame) + '.jpg'
+        name = './data/'+ str(currentFrame) + '.jpg'
         print ('Creating...' + name)
         cv2.imwrite(name, frame)
 
         # To stop duplicate images
         currentFrame += 1
     print("all frames created")
-    os.remove('PATH TO data_ FOLDER' + video + '/' + video + '_' + str(currentFrame - 1) + '.jpg')
+    os.remove('data/'+ str(currentFrame - 1)+'.jpg')
+    t_frames = (currentFrame - 2)
 
 
     #frame level computation
@@ -38,13 +42,13 @@ for video in videos:
     bdiff = decimal.Decimal(0)
     n = 0
 
-    frames = os.listdir('PATH TO data_ FOLDER' + video) #directory containing the frames of the video
+    frames = os.listdir('data') #directory containing the frames of the video
     frames = natsorted(frames)  #sorting the files in order
     for frame in frames:
-        file = pathlib.Path('PATH TO data_ FOLDER' + video + '/' + video + '_' + str(n + 1) + '.jpg')
+        file = pathlib.Path('data/'+str(n + 1)+'.jpg')
         if file.exists():
-            pic = imageio.imread('PATH TO data_ FOLDER' + video + '/' + video + '_' + str(n) + '.jpg')
-            pic1 = imageio.imread('PATH TO data_ FOLDER' + video + '/' + video + '_' + str(n + 1) + '.jpg')
+            pic = imageio.imread('data/'+str(n)+'.jpg')
+            pic1 = imageio.imread('data/'+str(n + 1)+'.jpg')
             height = int(format(pic.shape[0]))
             width = int(format(pic.shape[1]))
             tcount = height * width
@@ -78,32 +82,54 @@ for video in videos:
 
             change.append(float(rdiff + gdiff + bdiff) / 3)
             n+= 1
-            # print(change)
+            #print(change)
         else:
             print('reached the last frame')
+ 
+for i in range(len(change)):
+    if (change[i] >= threshold):
+        print(change[i])
+        print('the change is observed between frame ' + str(i) + ' and frame ' + str(i+1))
+        #actual algotithm:
+        number = random.randrange(20,50)
+        number1 = random.randrange(20,50)
+        #taking frames which lie before the chosen frame
+        for j in range(number):
+            if os.path.exists('data/'+str(i-j+1)+'.jpg'):
+                if os.path.exists('selected_frames/'+str(i-j+1)+'.jpg'):
+                    continue
+                else:
+                    shutil.copy('data/'+str(i-j+1)+'.jpg','selected_frames/'+str(i-j+1)+'.jpg')
+                    p+=1
+            else:
+                continue
+        
+        #taking frames which lie after the chosen frame        
+        for j in range(number):
+            if os.path.exists('data/'+str(i+j+1)+'.jpg'):
+                if os.path.exists('selected_frames/'+str(i+j+1)+'.jpg'):
+                    continue
+                else:
+                    shutil.copy('data/'+str(i+j+1)+'.jpg','selected_frames/'+str(i+j+1)+'.jpg')
+                    q+=1
+            else:
+                continue        
+shutil.rmtree('data')
+#extra info to show 
+t_frames_moved = (p + q)
+frames_removed = ((t_frames - t_frames_moved)/t_frames)*100
+print('clip removed: ' + str(frames_removed)+'%')   
 
-    #grabbin frames which have more than the given threshold motion diff:
-    #_MAIN_ALGORITHM_SPACE (UPDATE THIS):
-    #you might have to create a folder named: "selected_frames"
-    for i in range(len(change)):
-        filename = 'PATH TO data_ FOLDER' + video + '/' + video + '_' + str(i) + '.jpg'
-        if (change[i] >= threshold):
-            shutil.move(filename , 'PATH TO selected_frames FOLDER')
-        else:
-            os.remove(filename)
+#see the frames which are selected
+s_frames = os.listdir('selected_frames')
+s_frames = natsorted(s_frames)
+for x in range(len(s_frames)):
+    print(s_frames[x])
 
-    # shutil.rmtree('/Users/playment/Parth /Codes/data')
-
-
-
-print('no more videos found')
-print('\n')
-
-
+    
 #making the video from the selected frames:
-
-image_folder = 'PATH TO selected_frames FOLDER'
-video_name = 'OUTPUT FILE PATH'
+image_folder = 'selected_frames'
+video_name = 'output/OUT.avi'
 
 images = [img for img in os.listdir(image_folder) if img.endswith(".jpg")]
 frame = cv2.imread(os.path.join(image_folder, images[0]))
