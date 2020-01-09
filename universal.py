@@ -11,8 +11,8 @@ from natsort import natsorted
 # declare global variables
 key_frames = []
 threshold = 0.1
-video_path = '/Users/playment/PycharmProjects/sample_videos'
-data_path = '/Users/playment/PycharmProjects/data'
+video_path = 'sample_videos'
+data_path = 'data'
 
 
 def split(video):
@@ -26,7 +26,7 @@ def split(video):
         if success is True:
             # save image of the current frame in jpg format
 
-            name = '/Users/playment/PycharmProjects/data' + '/' + str(currentFrame) + '.jpg'
+            name = 'data' + '/' + str(currentFrame) + '.jpg'
             print('Creating...' + name, success)
             cv2.imwrite(name, frame)
         currentFrame += 1
@@ -47,10 +47,10 @@ def compute():
     frames = os.listdir(data_path)  # directory containing the frames of the video
     frames = natsorted(frames)  # sorting the files in order
     for frame in frames:
-        file = pathlib.Path('/Users/playment/PycharmProjects/data' + '/' + str(x) + '.jpg')
+        file = pathlib.Path('data' + '/' + str(x) + '.jpg')
         if file.exists():
-            pic = imageio.imread('/Users/playment/PycharmProjects/data' + '/' + str(n) + '.jpg')
-            pic1 = imageio.imread('/Users/playment/PycharmProjects/data' + '/' + str(x) + '.jpg')
+            pic = imageio.imread('data' + '/' + str(n) + '.jpg')
+            pic1 = imageio.imread('data' + '/' + str(x) + '.jpg')
             height = int(format(pic.shape[0]))
             width = int(format(pic.shape[1]))
             tcount = height * width
@@ -104,30 +104,29 @@ def make_cut():
 
         # taking frames which lie before the chosen frame
         for j in range(number):
-            if os.path.exists('/Users/playment/PycharmProjects/data' + '/' + str(key_frames[i] - j + 1) + '.jpg'):
+            if os.path.exists('data' + '/' + str(key_frames[i] - j + 1) + '.jpg'):
                 if os.path.exists(
-                        '/Users/playment/PycharmProjects/selected_frames' + video + '/' + str(key_frames[i] - j + 1) + '.jpg'):
+                        'selected_frames' + video + '/' + str(key_frames[i] - j + 1) + '.jpg'):
                     continue
                 else:
-                    shutil.copy('/Users/playment/PycharmProjects/data' + '/' + str(key_frames[i] - j + 1) + '.jpg',
-                                '/Users/playment/PycharmProjects/selected_frames' + str(key_frames[i] - j + 1) + '.jpg')
+                    shutil.copy('data' + '/' + str(key_frames[i] - j + 1) + '.jpg',
+                                'selected_frames' + str(key_frames[i] - j + 1) + '.jpg')
                     p += 1
             else:
                 continue
 
         # taking frames which lie after the chosen frame
         for j in range(number):
-            if os.path.exists('/Users/playment/PycharmProjects/data' + '/' + str(key_frames[i] + j + 1) + '.jpg'):
-                if os.path.exists('/Users/playment/PycharmProjects/selected_frames' + str(key_frames[i] + j + 1) + '.jpg'):
+            if os.path.exists('data' + '/' + str(key_frames[i] + j + 1) + '.jpg'):
+                if os.path.exists('selected_frames' + str(key_frames[i] + j + 1) + '.jpg'):
                     continue
                 else:
-                    shutil.copy('/Users/playment/PycharmProjects/data' + '/' + str(key_frames[i] + j + 1) + '.jpg',
-                                '/Users/playment/PycharmProjects/selected_frames' + str(key_frames[i] + j + 1) + '.jpg')
+                    shutil.copy('data' + '/' + str(key_frames[i] + j + 1) + '.jpg',
+                                'selected_frames' + str(key_frames[i] + j + 1) + '.jpg')
                     q += 1
             else:
                 continue
-
-    shutil.rmtree('/Users/playment/PycharmProjects/data')
+                
     # extra info to show
     t_frames_moved = (p + q)
     frames_removed = ((t_frames - t_frames_moved) / t_frames) * 100
@@ -137,7 +136,7 @@ def make_cut():
 def create():
     # join frames to make video
 
-    image_folder = '/Users/playment/PycharmProjects/selected_frames'
+    image_folder = 'selected_frames'
     video_name = 'output/OUT.avi'
 
     images = [img for img in os.listdir(image_folder) if img.endswith(".jpg")]
@@ -158,7 +157,7 @@ def initiate():
     # main function
     videos = os.listdir(video_path)
     videos = natsorted(videos)
-    # os.makedirs('/Users/playment/PycharmProjects/data')
+ 
     for video in videos:
         split(video)
         compute()
