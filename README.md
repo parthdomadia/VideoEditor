@@ -21,5 +21,5 @@ Pointers:
 - no sound, add external sound source later
 
 
-universal.py is the updated program, you will have to create the folders maunally
+universal.py is the updated program, you will have to create the folders maunally,
 will add more finer details to the program soon. 
