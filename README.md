@@ -1,5 +1,5 @@
 # VideoEditor
-AI assisted video editor based on motion difference between the frames of given videos 
+Video editor based on motion difference between the frames of given videos 
 
 
 All the differnet modules of the main code are also uploaded from which I build the main code.
